@@ -1,31 +1,23 @@
 import React, {useState, useEffect} from "react";
 import SearchBar from "./SearchBar";
-import youtube from "../APIs/youtube";
 import VideoList from "./VideoList";
 import VideoDetail from "./VideoDetail";
+import useVideos from "../hooks/useVideos";
 
 const App = () => {
-    const [videos, setvideos] = useState([]);
+    
     const [selectedVideo, setSelectedVideo] = useState(null);
+    const [videos, search] = useVideos('michael jackson'); //default search term
+    // setSelectedVideo(response.data.items[0]);
 
     useEffect(() => {
-        onTermSubmit('michael jackson');
-    }, []);
-
-    const onTermSubmit = async (term) => {
-        const response = await youtube.get('/search', {
-            params: {
-                q: term
-            }
-        });
-        setvideos(response.data.items);
-        setSelectedVideo(response.data.items[0]);
-    };
+        setSelectedVideo(videos[0]);
+    }, [videos]); //runs any time tine videos list gets updated
 
     return (
         <div className="ui container">
             <SearchBar 
-                onFormSubmit={onTermSubmit}
+                onFormSubmit={search}
             />
             <div className="ui grid">
                 <div className="ui row">
